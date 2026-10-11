@@ -37,3 +37,7 @@ build/
 
 ### Mac OS ###
 .DS_Store
+
+# ANTLR y Maven temporales
+dependency-reduced-pom.xml
+.antlr/

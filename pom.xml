@@ -15,7 +15,7 @@
     </properties>
 
     <dependencies>
-        <!-- Source: https://mvnrepository.com/artifact/org.antlr/antlr4-runtime -->
+        <!-- Runtime de ANTLR4 para ejecutar el lexer y parser -->
         <dependency>
             <groupId>org.antlr</groupId>
             <artifactId>antlr4-runtime</artifactId>
@@ -25,7 +25,10 @@
     </dependencies>
 
     <build>
+        <!-- Nombre final del JAR generado: roboscript.jar -->
+        <finalName>roboscript</finalName>
         <plugins>
+            <!-- Plugin para generar código Java a partir del archivo RoboScript.g4 -->
             <plugin>
                 <groupId>org.antlr</groupId>
                 <artifactId>antlr4-maven-plugin</artifactId>
@@ -36,8 +39,27 @@
                     </execution>
                 </executions>
             </plugin>
+
+            <!-- Plugin para empaquetar un JAR ejecutable que incluya las dependencias (ANTLR) -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>3.5.1</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals><goal>shade</goal></goals>
+                        <configuration>
+                            <transformers>
+                                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                    <mainClass>roboscript.Main</mainClass>
+                                </transformer>
+                            </transformers>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
-
 
 </project>

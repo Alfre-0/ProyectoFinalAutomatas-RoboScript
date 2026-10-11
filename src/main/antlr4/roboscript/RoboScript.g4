@@ -1,79 +1,80 @@
 grammar RoboScript;
 
-// ============ REGLAS DEL PARSER ============
+// Reglas del parser
+programa: robotDecl inicioDecl instruccion* EOF;
 
-programa
-    : robotDecl inicioDecl instruccion* EOF
-    ;
+robotDecl: ROBOT (CODIGO_ROBOT | CODIGO_ROBOT_INVALIDO | ID)?;
 
-robotDecl
-    : ROBOT CODIGO_ROBOT
-    ;
+inicioDecl: INICIO COORDENADA?;
 
-inicioDecl
-    : INICIO COORDENADA
-    ;
+instruccion:
+	avanzarInst
+	| retrocederInst
+	| girarInst
+	| seguirLineaInst
+	| levantarInst
+	| moverInst
+	| soltarInst
+	| repetirInst
+	| siInst;
 
-instruccion
-    : avanzarInst
-    | retrocederInst
-    | girarInst
-    | seguirLineaInst
-    | levantarInst
-    | moverInst
-    | soltarInst
-    | repetirInst
-    | siInst
-    ;
+avanzarInst: AVANZAR NUMERO?;
 
-avanzarInst     : AVANZAR NUMERO ;
-retrocederInst  : RETROCEDER NUMERO ;
-girarInst       : GIRAR (DERECHA | IZQUIERDA) ;
-seguirLineaInst : SEGUIR LINEA DURACION ;
-levantarInst    : LEVANTAR CODIGO_OBJETO ;
-moverInst       : MOVER COORDENADA ;
-soltarInst      : SOLTAR ;
+retrocederInst: RETROCEDER NUMERO?;
 
-repetirInst
-    : REPETIR NUMERO instruccion* FIN
-    ;
+girarInst: GIRAR (DERECHA | IZQUIERDA | direccionInvalida)?;
 
-siInst
-    : SI OBSTACULO instruccion* (SINO instruccion*)? FIN
-    ;
+direccionInvalida: ID;
 
-// ============ REGLAS DEL LEXER ============
-// Las palabras reservadas van antes que CODIGO_ROBOT e ID.
+seguirLineaInst: SEGUIR LINEA DURACION?;
 
-ROBOT      : 'ROBOT' ;
-INICIO     : 'INICIO' ;
-AVANZAR    : 'AVANZAR' ;
-RETROCEDER : 'RETROCEDER' ;
-GIRAR      : 'GIRAR' ;
-DERECHA    : 'DERECHA' ;
-IZQUIERDA  : 'IZQUIERDA' ;
-SEGUIR     : 'SEGUIR' ;
-LINEA      : 'LINEA' ;
-LEVANTAR   : 'LEVANTAR' ;
-MOVER      : 'MOVER' ;
-SOLTAR     : 'SOLTAR' ;
-REPETIR    : 'REPETIR' ;
-SI         : 'SI' ;
-SINO       : 'SINO' ;
-FIN        : 'FIN' ;
-OBSTACULO  : 'OBSTACULO' ;
-VELOCIDAD  : 'VELOCIDAD' ;
+levantarInst:
+	LEVANTAR (CODIGO_OBJETO | CODIGO_OBJETO_INVALIDO | ID)?;
 
-CODIGO_ROBOT  : [0-9][0-9][0-9][A-Z][A-Z][A-Z] ;
-CODIGO_ZONA   : 'Z-' [0-9][0-9] ;
-CODIGO_OBJETO : 'OBJ-' [0-9][0-9][0-9][0-9] ;
-COORDENADA    : 'X' [0-9]+ ',' 'Y' [0-9]+ ;
-PORCENTAJE    : [0-9]+ '%' ;
-DURACION      : [0-9]+ ('s' | 'm') ;
+moverInst: MOVER COORDENADA?;
 
-NUMERO : [0-9]+ ;
-ID     : [a-zA-Z_] [a-zA-Z_0-9]* ;
-REL_OP : '==' | '!=' | '<=' | '>=' | '<' | '>' ;
+soltarInst: SOLTAR;
 
-WS         : [ \t\r\n]+ -> skip ;
-COMENTARIO : '#' ~[\r\n]* -> skip ;
+repetirInst: REPETIR NUMERO? instruccion* FIN;
+
+siInst: SI OBSTACULO instruccion* (SINO instruccion*)? FIN;
+
+// Reglas del lexer
+ROBOT: 'ROBOT';
+INICIO: 'INICIO';
+AVANZAR: 'AVANZAR';
+RETROCEDER: 'RETROCEDER';
+GIRAR: 'GIRAR';
+DERECHA: 'DERECHA';
+IZQUIERDA: 'IZQUIERDA';
+SEGUIR: 'SEGUIR';
+LINEA: 'LINEA';
+LEVANTAR: 'LEVANTAR';
+MOVER: 'MOVER';
+SOLTAR: 'SOLTAR';
+REPETIR: 'REPETIR';
+SI: 'SI';
+SINO: 'SINO';
+FIN: 'FIN';
+OBSTACULO: 'OBSTACULO';
+VELOCIDAD: 'VELOCIDAD';
+
+CODIGO_ROBOT: [0-9][0-9][0-9][A-Z][A-Z][A-Z];
+CODIGO_ZONA: 'Z-' [0-9][0-9];
+CODIGO_OBJETO: 'OBJ-' [0-9][0-9][0-9][0-9];
+COORDENADA: 'X' [0-9]+ ',' 'Y' [0-9]+;
+PORCENTAJE: [0-9]+ '%';
+DURACION: [0-9]+ ('s' | 'm');
+
+// Reglas de apoyo para códigos que no cumplen el formato esperado pero que tienen la estructura
+// parecida Para capturar en un solo token y mostrar el mensaje de error de codigo de robot invalido
+CODIGO_OBJETO_INVALIDO: 'OBJ-' [0-9]+;
+CODIGO_ROBOT_INVALIDO: [0-9]+ [A-Za-z]+;
+CODIGO_ZONA_INVALIDO: 'Z-' [0-9]+;
+
+NUMERO: [0-9]+;
+ID: [a-zA-Z_] [a-zA-Z_0-9]*;
+REL_OP: '==' | '!=' | '<=' | '>=' | '<' | '>';
+
+ESPACIOBLANCO: [ \t\r\n]+ -> skip;
+COMENTARIO: '#' ~[\r\n]* -> skip;
