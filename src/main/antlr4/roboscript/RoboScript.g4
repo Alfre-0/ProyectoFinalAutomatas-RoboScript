@@ -39,7 +39,7 @@ repetirInst: REPETIR NUMERO? instruccion* FIN;
 
 siInst: SI OBSTACULO instruccion* (SINO instruccion*)? FIN;
 
-// Reglas del lexer
+// Reglas del lexer TOKENS
 ROBOT: 'ROBOT';
 INICIO: 'INICIO';
 AVANZAR: 'AVANZAR';
@@ -66,8 +66,7 @@ COORDENADA: 'X' [0-9]+ ',' 'Y' [0-9]+;
 PORCENTAJE: [0-9]+ '%';
 DURACION: [0-9]+ ('s' | 'm');
 
-// Reglas de apoyo para códigos que no cumplen el formato esperado pero que tienen la estructura
-// parecida Para capturar en un solo token y mostrar el mensaje de error de codigo de robot invalido
+// Tokens para formatos incorrectos
 CODIGO_OBJETO_INVALIDO: 'OBJ-' [0-9]+;
 CODIGO_ROBOT_INVALIDO: [0-9]+ [A-Za-z]+;
 CODIGO_ZONA_INVALIDO: 'Z-' [0-9]+;
