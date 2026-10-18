@@ -1,0 +1,122 @@
+# Prueba extrema valida: misión de almacén con múltiples objetos y rutas largas
+# El robot recorre toda una bodega, recogiendo y depositando objetos en zonas
+ROBOT 001ABX
+INICIO X00,Y00
+
+# ---- ZONA 1: esquina inferior izquierda ----
+AVANZAR 10
+GIRAR DERECHA
+AVANZAR 5
+LEVANTAR OBJ-0001
+MOVER X15,Y10
+SOLTAR
+
+# ---- ZONA 2: desplazarse al siguiente punto ----
+AVANZAR 8
+GIRAR IZQUIERDA
+AVANZAR 12
+GIRAR DERECHA
+AVANZAR 3
+
+# Chequeo de obstaculo antes de continuar
+SI OBSTACULO
+    RETROCEDER 2
+    GIRAR IZQUIERDA
+    AVANZAR 4
+SINO
+    AVANZAR 6
+FIN
+
+LEVANTAR OBJ-0002
+MOVER X30,Y20
+SOLTAR
+
+# ---- ZONA 3: recorrido en zigzag ----
+AVANZAR 10
+GIRAR IZQUIERDA
+AVANZAR 5
+GIRAR DERECHA
+AVANZAR 10
+GIRAR IZQUIERDA
+AVANZAR 5
+GIRAR DERECHA
+AVANZAR 10
+
+LEVANTAR OBJ-0003
+MOVER X55,Y25
+SOLTAR
+
+# ---- ZONA 4: ciclo de limpieza del pasillo ----
+REPETIR 4
+    AVANZAR 5
+    GIRAR DERECHA
+    AVANZAR 2
+    GIRAR IZQUIERDA
+FIN
+
+SI OBSTACULO
+    GIRAR DERECHA
+    AVANZAR 3
+    GIRAR IZQUIERDA
+SINO
+    AVANZAR 5
+FIN
+
+# ---- ZONA 5: seguir linea hacia siguiente zona ----
+SEGUIR LINEA 20s
+AVANZAR 8
+
+LEVANTAR OBJ-0004
+MOVER X70,Y30
+SOLTAR
+
+# ---- ZONA 6: ruta larga con repeticion ----
+REPETIR 5
+    AVANZAR 4
+    SI OBSTACULO
+        GIRAR DERECHA
+        AVANZAR 2
+        GIRAR IZQUIERDA
+    SINO
+        AVANZAR 2
+    FIN
+FIN
+
+AVANZAR 10
+GIRAR DERECHA
+AVANZAR 10
+GIRAR DERECHA
+AVANZAR 10
+GIRAR DERECHA
+AVANZAR 10
+
+# ---- ZONA 7: deposito final ----
+LEVANTAR OBJ-0005
+MOVER X90,Y90
+SOLTAR
+
+# Volver al origen siguiendo la linea
+SEGUIR LINEA 45s
+
+RETROCEDER 5
+GIRAR IZQUIERDA
+AVANZAR 8
+GIRAR DERECHA
+AVANZAR 6
+GIRAR IZQUIERDA
+AVANZAR 10
+RETROCEDER 2
+
+# Ciclo de cierre: el robot da vueltas alrededor del punto de inicio
+REPETIR 2
+    AVANZAR 10
+    GIRAR DERECHA
+    AVANZAR 10
+    GIRAR DERECHA
+    AVANZAR 10
+    GIRAR DERECHA
+    AVANZAR 10
+    GIRAR DERECHA
+FIN
+
+SOLTAR
