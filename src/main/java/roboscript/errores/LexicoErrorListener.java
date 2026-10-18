@@ -29,6 +29,11 @@ public class LexicoErrorListener extends BaseErrorListener {
             }
         }
 
+        // ANTLR escapa los saltos de linea como texto (\n, \r, \t). Si el lexer
+        // llego a consumirlos antes de fallar (por ejemplo con "!" o "="), se quitan
+        // para mostrar unicamente el simbolo que causo el error.
+        simbolo = simbolo.replace("\\n", "").replace("\\r", "").replace("\\t", "").trim();
+
         String formatoDetallado = String.format(
                 "ERROR LÉXICO: Línea: %d, Columna: %d, Elemento no reconocido: %s",
                 line, charPositionInLine + 1, simbolo

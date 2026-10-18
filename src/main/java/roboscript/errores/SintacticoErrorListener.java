@@ -6,12 +6,29 @@ import org.antlr.v4.runtime.Recognizer;
 import org.antlr.v4.runtime.Token;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 public class SintacticoErrorListener extends BaseErrorListener {
 
-    private final List<String> erroresDetallados = new ArrayList<>();
-    private final List<String> erroresResumen = new ArrayList<>();
+    // Cada error guarda su linea y el orden en que se registro. Asi la lista final
+    // se entrega ordenada por linea, sin importar si el error lo detecto el parser
+    // (syntaxError) o el recorrido posterior del arbol (registrarError).
+    private static final class Entrada {
+        final int linea;
+        final int orden;
+        final String detallado;
+        final String resumen;
+
+        Entrada(int linea, int orden, String mensaje) {
+            this.linea = linea;
+            this.orden = orden;
+            this.detallado = String.format("ERROR SINTÁCTICO: Línea: %d, %s", linea, mensaje);
+            this.resumen = String.format("Línea %d: %s", linea, mensaje);
+        }
+    }
+
+    private final List<Entrada> errores = new ArrayList<>();
 
     @Override
     public void syntaxError(Recognizer<?, ?> recognizer,
@@ -21,14 +38,11 @@ public class SintacticoErrorListener extends BaseErrorListener {
                             String msg,
                             RecognitionException e) {
 
-        String mensajeEspanol = traducirMensaje(msg, offendingSymbol);
-        erroresDetallados.add(String.format("ERROR SINTÁCTICO: Línea: %d, %s", line, mensajeEspanol));
-        erroresResumen.add(String.format("Línea %d: %s", line, mensajeEspanol));
+        registrarError(line, traducirMensaje(msg, offendingSymbol));
     }
 
     public void registrarError(int linea, String mensaje) {
-        erroresDetallados.add(String.format("ERROR SINTÁCTICO: Línea: %d, %s", linea, mensaje));
-        erroresResumen.add(String.format("Línea %d: %s", linea, mensaje));
+        errores.add(new Entrada(linea, errores.size(), mensaje));
     }
 
     private String traducirMensaje(String msg, Object offendingSymbol) {
@@ -37,8 +51,16 @@ public class SintacticoErrorListener extends BaseErrorListener {
             textoToken = ((Token) offendingSymbol).getText();
         }
 
-        if (msg.contains("missing 'FIN'") || msg.contains("expecting 'FIN'") || msg.contains("FIN")) {
+        // Solo se analiza la parte "expecting ..." del mensaje de ANTLR. Asi un FIN
+        // que aparece como token inesperado no se confunde con un FIN que falta.
+        String esperados = msg.contains("expecting") ? msg.substring(msg.indexOf("expecting")) : msg;
+
+        if (msg.startsWith("missing 'FIN'") || esperados.contains("'FIN'")) {
             return "Se esperaba FIN.";
+        }
+
+        if ("FIN".equals(textoToken)) {
+            return "FIN inesperado: no hay un bloque SI o REPETIR abierto.";
         }
 
         if (msg.contains("NUMERO")) {
@@ -64,19 +86,33 @@ public class SintacticoErrorListener extends BaseErrorListener {
         return "Error en la estructura de la instrucción.";
     }
 
+    private List<Entrada> ordenados() {
+        List<Entrada> copia = new ArrayList<>(errores);
+        copia.sort(Comparator.<Entrada>comparingInt(x -> x.linea).thenComparingInt(x -> x.orden));
+        return copia;
+    }
+
     public boolean tieneErrores() {
-        return !erroresDetallados.isEmpty();
+        return !errores.isEmpty();
     }
 
     public int cantidadErrores() {
-        return erroresDetallados.size();
+        return errores.size();
     }
 
     public List<String> getErroresDetallados() {
-        return erroresDetallados;
+        List<String> lista = new ArrayList<>();
+        for (Entrada x : ordenados()) {
+            lista.add(x.detallado);
+        }
+        return lista;
     }
 
     public List<String> getErroresResumen() {
-        return erroresResumen;
+        List<String> lista = new ArrayList<>();
+        for (Entrada x : ordenados()) {
+            lista.add(x.resumen);
+        }
+        return lista;
     }
 }
