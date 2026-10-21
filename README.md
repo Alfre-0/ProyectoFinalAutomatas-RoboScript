@@ -31,30 +31,47 @@ Analizador léxico y sintáctico desarrollado en Java utilizando ANTLR 4 para el
 
 ## Compilación y Ejecución
 
-### Desde consola con Maven
+### Opción 1: Desde IntelliJ IDEA
 
-Para compilar el proyecto y generar el archivo ejecutable `.jar`:
+1. **Abrir el proyecto:**
+   - Abre IntelliJ IDEA y selecciona **Open**.
+   - Elige la carpeta del proyecto `ProyectoAutomatas-roboscript`. IntelliJ detectará automáticamente el archivo `pom.xml` y descargará las dependencias de Maven.
 
-```bash
-mvn clean package
-```
-*(Si no tienes Maven en las variables de entorno en Windows, puedes usar `.\mvn.bat clean package`)*
+2. **Ejecutar el programa:**
+   - En el explorador de archivos del proyecto, navega a `src/main/java/roboscript/Main.java`.
+   - Haz clic derecho sobre el archivo `Main.java` (o sobre el icono verde ▶ al lado de `public static void main`) y selecciona **Run 'Main.main()'**.
+   - Por defecto, analizará el archivo `src/test/resources/casos/valido_completo.robot` y mostrará la tabla de tokens y el resumen en la consola inferior.
 
-Para ejecutar el analizador con un archivo de prueba:
+3. **Probar otros archivos de prueba (.robot):**
+   - En la barra superior de IntelliJ, haz clic en el menú desplegable de ejecución (al lado del botón de Play verde ▶) y selecciona **Edit Configurations...**
+   - En el campo **Program arguments** (Argumentos del programa), escribe la ruta del archivo que desees evaluar, por ejemplo:
+     ```text
+     src/test/resources/casos/invalido_varios_errores.robot
+     ```
+   - Haz clic en **Apply** y luego en **Run**.
+   
+3.1 O simplemente elija el archivo a probar y de clic derecho, seleccionar Copy Path, y seleccionar Path From Content Root y pegar en el main en la variable rutaArchivo
+  
 
-```bash
-java -jar target/roboscript.jar src/test/resources/casos/valido_completo.robot
-```
+---
 
-### Ejecutar casos con errores:
+### Opción 2: Desde la consola con Maven
 
-```bash
-java -jar target/roboscript.jar src/test/resources/casos/invalido_varios_errores.robot
-```
+También puedes compilar y empaquetar el proyecto en un `.jar` ejecutable:
 
-### Desde IntelliJ IDEA
+1. **Compilar y generar el archivo JAR:**
+   ```bash
+   mvn clean package
+   ```
+   *(Esto generará el archivo `roboscript.jar` dentro de la carpeta `target/`)*
 
-1. Abrir la carpeta del proyecto en IntelliJ IDEA.
-2. Abrir `src/main/java/roboscript/Main.java`.
-3. Ejecutar la clase (por defecto analizará un archivo de prueba de la carpeta `casos`).
-4. Para probar otro archivo, configurar en *Run > Edit Configurations* el argumento del programa con la ruta del archivo `.robot` deseado.
+2. **Ejecutar un caso válido:**
+   ```bash
+   java -jar target/roboscript.jar src/test/resources/casos/valido_completo.robot
+   ```
+
+3. **Ejecutar un caso con errores:**
+   ```bash
+   java -jar target/roboscript.jar src/test/resources/casos/invalido_varios_errores.robot
+   ```
+
