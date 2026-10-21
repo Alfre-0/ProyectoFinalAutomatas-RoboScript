@@ -3,9 +3,6 @@
 ROBOT 123ROB
 INICIO X10,Y05
 
-# Esto es valido: AVANZAR y RETROCEDER sin numero estan permitidos
-AVANZAR
-RETROCEDER
 
 # Esto genera error semantico/lexico: ARRIBA no es DERECHA ni IZQUIERDA
 GIRAR ARRIBA
