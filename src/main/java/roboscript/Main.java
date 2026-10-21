@@ -21,7 +21,7 @@ public class Main {
         if (args.length > 0) {
             rutaArchivo = args[0];
         } else {
-            rutaArchivo = "src/test/resources/casos/error_lexico_simbolo.robot";
+            rutaArchivo = "src/test/resources/casos/valido_completo.robot";
         }
 
         File archivo = new File(rutaArchivo);
