@@ -41,7 +41,7 @@ public class Main {
         CharStream input = CharStreams.fromPath(archivo.toPath());
 
         // Implementando el Lexer
-        
+
         RoboScriptLexer lexer = new RoboScriptLexer(input);
         lexer.removeErrorListeners(); // Para evitar que salgan los errores en ingles
         LexicoErrorListener errorLexico = new LexicoErrorListener();
@@ -49,8 +49,6 @@ public class Main {
 
         CommonTokenStream tokens = new CommonTokenStream(lexer);
         tokens.fill();
-
-        // Implementando el Parser
 
         int totalTokens = 0;
         for (Token t : tokens.getTokens()) {
@@ -61,6 +59,7 @@ public class Main {
 
         TablaTokens.imprimir(tokens);
 
+        // Implementando el Parser
 
         RoboScriptParser parser = new RoboScriptParser(tokens);
         parser.removeErrorListeners();
