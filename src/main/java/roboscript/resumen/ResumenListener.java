@@ -14,6 +14,7 @@ public class ResumenListener extends RoboScriptBaseListener {
     public int giros = 0;
     public int objetosLevantados = 0;
     public int objetosSoltados = 0;
+    public int cambiosVelocidad = 0;
     public int bloquesSi = 0;
     public int bloquesRepetir = 0;
     public int instruccionesAnalizadas = 0;
@@ -118,6 +119,21 @@ public class ResumenListener extends RoboScriptBaseListener {
     @Override
     public void enterSoltarInst(RoboScriptParser.SoltarInstContext ctx) {
         objetosSoltados++;
+    }
+
+    @Override
+    public void enterVelocidadInst(RoboScriptParser.VelocidadInstContext ctx) {
+        int linea = ctx.getStart().getLine();
+
+        if (ctx.PORCENTAJE() != null) {
+            cambiosVelocidad++;
+        } else if (ctx.NUMERO() != null) {
+            errorListener.registrarError(linea, "Se esperaba el símbolo '%' después del número en VELOCIDAD.");
+        } else if (ctx.PORCENTAJE_INVALIDO() != null) {
+            errorListener.registrarError(linea, "Se esperaba número después de VELOCIDAD.");
+        } else {
+            errorListener.registrarError(linea, "Se esperaba PORCENTAJE después de VELOCIDAD.");
+        }
     }
 
     @Override

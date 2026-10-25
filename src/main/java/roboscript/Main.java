@@ -21,7 +21,7 @@ public class Main {
         if (args.length > 0) {
             rutaArchivo = args[0];
         } else {
-            rutaArchivo = "src/test/resources/casos/valido_completo.robot";
+            rutaArchivo = "src/test/resources/pruebasProyecto/Prueba 4.robot";
         }
 
         File archivo = new File(rutaArchivo);
@@ -111,6 +111,7 @@ public class Main {
             System.out.println("Giros: " + resumen.giros);
             System.out.println("Objetos levantados: " + resumen.objetosLevantados);
             System.out.println("Objetos soltados: " + resumen.objetosSoltados);
+            System.out.println("Cambios de velocidad: " + resumen.cambiosVelocidad);
             System.out.println("Bloques SI: " + resumen.bloquesSi);
             System.out.println("Bloques REPETIR: " + resumen.bloquesRepetir);
             System.out.println("=========================================");

@@ -15,6 +15,7 @@ instruccion:
 	| levantarInst
 	| moverInst
 	| soltarInst
+	| velocidadInst
 	| repetirInst
 	| siInst;
 
@@ -34,6 +35,8 @@ levantarInst:
 moverInst: MOVER COORDENADA?;
 
 soltarInst: SOLTAR;
+
+velocidadInst: VELOCIDAD (PORCENTAJE | NUMERO | PORCENTAJE_INVALIDO)?;
 
 repetirInst: REPETIR NUMERO? instruccion* FIN;
 
@@ -70,6 +73,7 @@ DURACION: [0-9]+ ('s' | 'm');
 CODIGO_OBJETO_INVALIDO: 'OBJ-' [0-9]+;
 CODIGO_ROBOT_INVALIDO: [0-9]+ [A-Za-z]+;
 CODIGO_ZONA_INVALIDO: 'Z-' [0-9]+;
+PORCENTAJE_INVALIDO: '%';
 
 NUMERO: [0-9]+;
 ID: [a-zA-Z_] [a-zA-Z_0-9]*;

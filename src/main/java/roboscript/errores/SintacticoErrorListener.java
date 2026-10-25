@@ -79,6 +79,10 @@ public class SintacticoErrorListener extends BaseErrorListener {
             return "Se esperaba el código del robot (formato: ###LLL).";
         }
 
+        if (msg.contains("PORCENTAJE")) {
+            return "Se esperaba PORCENTAJE después de VELOCIDAD.";
+        }
+
         if (!textoToken.isEmpty() && !textoToken.equals("<EOF>")) {
             return "Instrucción o token no esperado: '" + textoToken + "'.";
         }
